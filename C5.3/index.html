@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>C5_3_XMLHttpRequests</title>
+        <style>
+            .gallery {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap
+            }
+            .card {
+                margin: 10px 10px 0 0;
+            }
+            .card-img {
+                width: 600px;
+                height: 500px;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div class="form-container">
+            <lable form="num">Enter number: </lable>
+            <input class="in-value" id="num" type="number" placeholder="1 - 10">
+            <button class="btn">Get</button>
+        </div>
+
+        <div class="gallery">Images</div>
+
+        <script>
+            document.querySelector(".btn").addEventListener("click", () => {
+                let num = document.querySelector(".in-value").value;
+                if (num <= 0 || num > 10) {
+                    incVal();
+                } else {
+                    let url = handlURL(num);
+                    xmlRequest(url, showImg);
+                }
+            });
+
+            function incVal() {
+                return (() => {document.querySelector(".gallery").innerHTML = "Out of range 1 - 10";
+                    setTimeout(() => {document.querySelector(".gallery").innerHTML = "";}, 2000)})();
+            }
+
+            function handlURL(num, url = "https://picsum.photos/v2/list?limit=10") {
+                let currUrl = url.split("=");
+                currUrl[1] = num;
+                currUrl = currUrl.join("=");
+                return currUrl;
+            }
+
+            function xmlRequest(url, cb) {
+                let xhr = new XMLHttpRequest();
+                xhr.open("GET", url);
+                xhr.onload = function() {
+                    if (xhr.status != 200) {
+                        console.log("Response status: ", xhr.status);
+                    } else {
+                        let result = JSON.parse(xhr.response);
+                        if (cb)
+                            cb(result);
+                    }
+                };
+                xhr.onerror = function() {
+                    console.log("Error! Response status: ", xhr.status);
+                };
+                xhr.send();
+            }
+
+            function showImg(apiImg) {
+                let cards = "";
+                apiImg.forEach(item => {
+                    const card = `
+                    <div class="card">
+                        <img src="${item.download_url}" class="card-img"/>
+                    </div>
+                    `;
+                    cards += card;
+                });
+                document.querySelector(".gallery").innerHTML = cards;
+            }
+        </script>
+    </body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>C5_7_Final_task</title>
+        <style>
+            .card {
+                width: 500px;
+                height: 400px;
+                margin: 35px 35px;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div>
+            <lable form="num">Page number: </lable>
+            <input type="number" id="num" placeholder="1 - 10">
+            <lable form="lim">Limit: </lable>
+            <input type="number" id="lim" placeholder="1 - 10">
+            <button class="btn">Get</button>
+        </div>
+
+        <div class="gallery"></div>
+
+        <script>
+            let page_img = localStorage.getItem("page_img");
+            onload =  function() {
+                if (page_img) {
+                    let savedImg = JSON.parse(page_img);
+                    showImgs(savedImg);
+                }
+            }
+
+            document.querySelector(".btn").addEventListener("click", () => {
+                let inputValList = getInputValues();
+
+                if ((inputValList[0] < 1 || inputValList[0] > 10) && (inputValList[1] < 1 || inputValList[1] > 10))
+                    document.querySelector(".gallery").innerHTML = "Page number and page limit are not in range 1 - 10";
+                else if (inputValList[0] < 1 || inputValList[0] > 10)
+                    document.querySelector(".gallery").innerHTML = "Page number is not in range 1 - 10";
+                else if (inputValList[1] < 1 || inputValList[1] > 10)
+                    document.querySelector(".gallery").innerHTML = "Page limit is not in range 1 - 10";
+                else {
+                    let currUrl = urlHandler(inputValList);
+                    sendRequest(currUrl, showImgs);
+                }
+            });
+
+            function getInputValues() {
+                let val1 = document.getElementById("num").value;
+                let val2 = document.getElementById("lim").value;
+                return [val1, val2];
+            }
+
+            function urlHandler(arr, url = "https://picsum.photos/v2/list?page=1&limit=10") {
+
+                let currUrl = url.split("&");
+
+                currUrl[0] = currUrl[0].split("=");
+                currUrl[0][1] = arr[0];
+                currUrl[0] = currUrl[0].join("=");
+
+                currUrl[1] = currUrl[1].split("=");
+                currUrl[1][1] = arr[1];
+                currUrl[1] = currUrl[1].join("=");
+
+                currUrl = currUrl.join("&");
+                return currUrl;
+            }
+
+            function showImgs(apiData) {
+                let cards = "";
+                for (let i = 0; i < apiData.length; i++) {
+                    card = `
+                    <img class="card" src="${apiData[i].download_url}">
+                    `;
+                    cards += card;
+                }
+                document.querySelector(".gallery").innerHTML = cards;
+            }
+
+            function sendRequest(url, cb) {
+                fetch(url)
+                    .then(response => {
+                        if (response.status !== 200)
+                            throw error
+                        else
+                            return response;
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        localStorage.setItem("page_img", JSON.stringify(data));
+                        if (cb)
+                            cb(data)
+                    })
+                    .catch((e) => {
+                        console.log("Error" + e.message);
+                        console.log(e.response);
+                    })
+            }
+        </script>
+    </body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>C5_6_Fetch_request</title>
+        <style>
+            .gallery {
+                margin: 50px;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div class="form-container">
+            <lable form="w">Width</lable>
+            <input id="w" type="number" placeholder="100-300">
+            <lable form="h">Heigth</lable>
+            <input id="h" type="number" placeholder="100-300">
+            <button class="btn">Get</button>
+        </div>
+
+        <div class="gallery"></div>
+
+        <script>
+            document.querySelector(".btn").addEventListener("click", () => {
+                let num = getVal();
+                if (num[0] < 100 || num[0] > 300 || num[1] < 100 || num[1] > 300) {
+                    incVal();
+                } else {
+                    let url = handlURL(num);
+                    fetchRequest(url, showImg);
+                }
+            });
+
+            function getVal() {
+                let val1 = document.getElementById("w").value;
+                let val2 = document.getElementById("h").value;
+                return [val1, val2];
+            };
+
+            function incVal() {
+                document.querySelector(".gallery").innerHTML = "All numbers should be in range in range 100 - 300";
+                setTimeout(() => document.querySelector(".gallery").innerHTML = "", 2500);
+            };
+
+            function handlURL(arr, url="https://picsum.photos/200/300") {
+                let currUrl = url.split("/");
+                currUrl[currUrl.length - 2] = arr[0];
+                currUrl[currUrl.length - 1] = arr[1];
+                currUrl = currUrl.join("/");
+                return currUrl;
+            };
+
+            function showImg(apiImg) {
+                document.querySelector(".gallery").innerHTML = `
+                <img src="${apiImg}">
+                `;
+            };
+
+            function fetchRequest(url, cb) {
+                fetch(url)
+                    .then(response => {
+                        if (response.status !== 200)
+                            throw error
+                        else
+                            return response;
+                    })
+                    .then(response => {
+                        if (cb)
+                            cb(response.url);
+                })
+                    .catch((e) => console.log("error" + e.message))
+            };
+        </script>
+    </body>
+</html>
