@@ -36,10 +36,10 @@ for (let i = 0; i < list.length; i++) {
     arrObj.push(obj);
 };
 
-let result = {
+let result1 = {
     list: arrObj
 };
-console.log(result);
+console.log(result1);
 
 // JSON
 
@@ -61,14 +61,14 @@ const jsonString = `
 }`;
 
 const data = JSON.parse(jsonString);
-const list = data.list;
-const first = list[0];
-const second = list[1];
-const result =
+const listData = data.list;
+const first = listData[0];
+const second = listData[1];
+const result2 =
     {
-        list: [
+        listData: [
             { name: first.name, age: Number(first.age), prof: first.prof },
             { name: second.name, age: Number(second.age), prof: second.prof },
         ]
     }
-console.log(result);
+console.log(result2);
