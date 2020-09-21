@@ -59,5 +59,15 @@ const jsonDATA = `
  ]
 }`;
 
-const jsObj = JSON.parse(jsonDATA);
-console.log(jsObj);
+const data = JSON.parse(jsonDATA);
+const list = data.list;
+const first = list[0];
+const second = list[1];
+const result =
+{
+    list: [
+        { name: first.name, age: Number(first.age), prof: first.prof },
+        { name: second.name, age: Number(second.age), prof: second.prof },
+    ]
+}
+console.log(result)
