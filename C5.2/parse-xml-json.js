@@ -45,30 +45,29 @@ console.log(result1);
 
 const jsonString = `
 {
- "list": 
- [
-              {
-                   "name": "Petr",
-                   "age": "20",
-                   "prof": "mechanic"
-              },
-              { 
-                  "name": "Vova",
-                  "age": "60",
-                  "prof": "pilot"
-              }
- ]
+    "list":
+    [
+        {
+            "name": "Petr",
+            "age": "20",
+            "prof": "mechanic"
+        },
+        {
+            "name": "Vova",
+            "age": "60",
+            "prof": "pilot"
+        }
+    ]
 }`;
 
 const data = JSON.parse(jsonString);
 const listData = data.list;
 const first = listData[0];
 const second = listData[1];
-const result2 =
-    {
-        listData: [
-            { name: first.name, age: Number(first.age), prof: first.prof },
-            { name: second.name, age: Number(second.age), prof: second.prof },
-        ]
-    }
+const result2 = {
+  listData: [
+    { name: first.name, age: Number(first.age), prof: first.prof },
+    { name: second.name, age: Number(second.age), prof: second.prof }
+  ]
+};
 console.log(result2);
